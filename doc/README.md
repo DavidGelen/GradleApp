@@ -5,4 +5,19 @@
 
     buildConfigField "String","myname","\"abs\""
 
-[](https://blog.csdn.net/u013187628/article/details/80846835)
+[Android中通过gradle脚本做的一些小事情](https://blog.csdn.net/u013187628/article/details/80846835)
+
+---
+
+### 学习重点
+
+- Gradle自定义插件
+
+- 自定义Task
+
+- Gradle Android插件熟悉程度
+
+---
+
+布置一个学习任务：Android通过build.gradle自定义task读取Manifest配置信息？
+
