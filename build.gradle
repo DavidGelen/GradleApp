@@ -26,3 +26,127 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+task simpleTaskName {
+    doLast{
+        println "simpleTask"
+    }
+}
+
+task('simpleTaskName3') <<
+{
+    println "simpleTaskName3"
+}
+
+class UserDefined extends DefaultTask {
+    @TaskAction
+    def fun(){
+        println "I'm hererrrrrrrrrrr"
+    }
+}
+task testTask(type: UserDefined)
+
+class HelloWorldTask extends DefaultTask {
+
+    @Optional
+    String message = 'I am davenkin'
+
+    @TaskAction def hello()
+    {
+        println "hello world $message"
+    }
+}
+
+task hello(type: HelloWorldTask)
+
+task hello1(type: HelloWorldTask) {
+    message = "I am a programmer"
+}
+
+//往destination.txt写东西这个task是完整执行了，可以揣摩一下
+task combineFileContentIncremental {
+    def sources = fileTree('doc/README.md')
+    def destination = file('destination.txt')
+
+    inputs.dir sources
+    outputs.file destination
+
+    doLast {
+        destination.withPrintWriter { writer ->
+            sources.each {source ->
+                writer.println source.text
+            }
+        }
+    }
+}
+
+//定义属性
+ext.property1 = "this is property1"
+
+ext {
+    property2 = "this is property2"
+}
+
+//在定义了Property后，使用这些Property时我们则不需要ext，而是可以直接访问:
+task showProperties << {
+    println property1
+    println property2
+}
+
+//==============自定义plugin start===============
+
+class DateAndTimePluginExtension {
+    String timeFormat = "MM/dd/yyyyHH:mm:ss.SSS"
+    String dateFormat = "yyyy-MM-dd"
+}
+
+class DateAndTimePlugin implements Plugin<Project> {
+    void apply(Project project) {
+        project.extensions.create("dateAndTime", DateAndTimePluginExtension)
+
+        project.task('showTime') << {
+            println "Current time is " + new Date().format(project.dateAndTime.timeFormat)
+        }
+
+        project.tasks.create('showDate') << {
+            println "Current date is " + new Date().format(project.dateAndTime.dateFormat)
+        }
+    }
+}
+
+apply plugin: DateAndTimePlugin
+
+
+dateAndTime {
+    timeFormat = 'HH:mm:ss.SSS'
+    dateFormat = 'MM/dd/yyyy'
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
